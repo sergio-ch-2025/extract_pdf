@@ -1,0 +1,60 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Archivos de configuración locales
+.env
+.env.*
+
+# Configuración de herramientas de IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# historial 
+.history/
+
+# Salida de pruebas / logs / datos temporales
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Compilación de paquetes
+build/
+dist/
+*.egg-info/
+
+# Notebooks temporales
+.ipynb_checkpoints/
+
+# Archivos de salida o resultado de OCR si los generas temporalmente
+output/
+resultados/
+*.csv
+*.json
+
+# Archivos generados por GitLab CI/CD (si aplica)
+*.coveragerc
+.cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+
+# Otros que tú quieras excluir (PDFs de prueba, imágenes grandes, backups)
+*.pdf
+*.jpg
+*.png
+*.zip

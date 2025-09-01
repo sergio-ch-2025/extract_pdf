@@ -1,0 +1,98 @@
+[conexion]
+usuario = root
+host = 192.168.100.186
+password = ptr3d4*
+port = 22
+key_filename = 
+#; (opcional, para clave privada SSH)
+scp_o_sftp= scp 
+
+
+[paths]
+#directorio de donde se toman inicialmente los pdf
+directorio_local_entrada = ../entrada    
+
+#directorio en donde se hacen las lecturas de los pdf que estan en proceso.
+directorio_local_para_procesar = ../para_procesar
+
+#directorio remoto desde donde se deben obtener los archivos y poder dejarlos en directorio_local_entrada
+directorio_remoto_origen = /website/sistemas/storage/app/public/abbyy_tmp/
+
+#directorio remoto en donde se deben dejar los archivos cuando son obtenidos desde directorio_remoto_origen y que ya estan procesados
+directorio_remoto_leidos = /website/sistemas/storage/app/public/abbyy_tmp/procesados
+
+#directorio donde se deben dejar los archivos cuando ya estan procesados 
+carpeta_procesados = ../procesados
+
+#directorio en donde se deben dejar los archivos que son excepciones y que no se pueden leer o trabajar
+directorio_errores = ../excepciones
+
+#directorio en donde se almacenan las imagenes temporales para obtener la mejor lectura del pdf 
+directorio_temporal = ../tmp
+
+#directorio en donde se alojan los archivos que poseen mas de una pagina y ya fueron segmentados hoja a hoja para ser procesados. 
+carpeta_archivos_padres = ../procesados/archivos_padres
+
+[logs]
+archivo_log = ../logs/actividad.log
+dias_log = 7
+enviar_correo_automatico = false
+
+
+[database]
+host = localhost
+user = sch_virtual
+password = Linux3468
+dbname = extraccion_pdf
+
+[database_lectura]
+host = 192.168.100.213
+user = root
+password = ptr3d4*
+dbname = robot_gestiones
+
+[ocr]
+use_doctr = true
+use_paddleocr = true
+use_tesseract4 = true
+use_tesseract6 = true
+use_easyocr = false
+use_nativo =true
+
+usar_preprocesamiento_cv2 = true
+procesamiento_simultaneo= 6
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+[extraccion]
+ruta_diccionario_colores = ../diccionarios/Diccionario_colores.csv
+ruta_diccionario_carrocerias = ../diccionarios/carrocerias.csv
+ruta_diccionario_comunas = ../diccionarios/Diccionario_comunas.csv
+ruta_diccionario_ciudades = ../diccionarios/Diccionario_ciudades.csv
+ruta_diccionario_marcas = ../diccionarios/Diccionario_marcas.csv
+
+directorio_salida_csv = ../resultados
+directorio_salida_json = ../resultados
+
+guardar_csv = false
+guardar_json = false
+guardar_bd = true
+
+
+[email]
+smtp_host = smtp.gmail.com
+smtp_port = 587
+smtp_user = tu_email@gmail.com
+smtp_password = tu_contraseña_o_token
+email_destino = destino@empresa.com
+
+[evaluacion]
+score_minimo_aceptable = 0.5
+
+[html_test]
+directorio_temporal = ../tmp
+abrir_html_automatico = false
+
+[pipeline]
+delay_pipeline = 5
+max_archivos_por_tanda = 5
