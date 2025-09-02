@@ -14,40 +14,51 @@ from datetime import datetime
 import shutil
 from time import time
 
-# ===========================
-# Cargar configuraciones
-# ===========================
-config = configparser.ConfigParser()
-try:
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-    # Permitir override por variable de entorno, si se desea.
-    DEFAULT_CONFIG_PATH = os.path.abspath(os.path.join(SCRIPT_DIR, '..', 'config', 'config.cf'))
-    CONFIG_PATH = os.environ.get('EXTRACT_PDF_CONFIG', DEFAULT_CONFIG_PATH)
+###############################
+# Configuración (carga diferida)
+###############################
+DB_HOST = None
+DB_USER = None
+DB_PASS = None
+DB_NAME = None
+DIRECTORIO_PDFS = None
+DIRECTORIO_ERRORES = None
+CARPETA_ARCHIVOS_PADRES = None
+logfile = None
 
-    read_files = config.read(CONFIG_PATH)
+
+def cargar_config(config_path_override=None):
+    global DB_HOST, DB_USER, DB_PASS, DB_NAME
+    global DIRECTORIO_PDFS, DIRECTORIO_ERRORES, CARPETA_ARCHIVOS_PADRES, logfile
+
+    cfg = configparser.ConfigParser()
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    DEFAULT_CONFIG_PATH = os.path.abspath(os.path.join(SCRIPT_DIR, '..', 'config', 'config.cf'))
+    CONFIG_PATH = config_path_override or os.environ.get('EXTRACT_PDF_CONFIG', DEFAULT_CONFIG_PATH)
+
+    read_files = cfg.read(CONFIG_PATH)
     if not read_files:
         raise FileNotFoundError(f"No se pudo leer el archivo de configuración en: {CONFIG_PATH}")
 
-    if not config.has_section('database'):
-        raise configparser.NoSectionError('database')
-    if not config.has_section('paths'):
-        raise configparser.NoSectionError('paths')
+    secciones = cfg.sections()
+    if not cfg.has_section('database'):
+        raise configparser.NoSectionError(f"database (secciones encontradas: {secciones})")
+    if not cfg.has_section('paths'):
+        raise configparser.NoSectionError(f"paths (secciones encontradas: {secciones})")
 
-    DB_HOST = config.get('database', 'host')
-    DB_USER = config.get('database', 'user')
-    DB_PASS = config.get('database', 'password')
-    DB_NAME = config.get('database', 'dbname')
+    DB_HOST = cfg.get('database', 'host')
+    DB_USER = cfg.get('database', 'user')
+    DB_PASS = cfg.get('database', 'password')
+    DB_NAME = cfg.get('database', 'dbname')
 
-    DIRECTORIO_PDFS = config.get('paths', 'directorio_local_para_procesar')
-    DIRECTORIO_ERRORES = config.get('paths', 'directorio_errores', fallback='../errores')
-    CARPETA_ARCHIVOS_PADRES = config.get('paths', 'carpeta_archivos_padres', fallback='../archivos_padres')
-    logfile = config.get('logs', 'archivo_log', fallback='../logs/actividad.log')
-except Exception as e:
-    print(f"Error cargando configuraciones: {e}\nRuta intentada: {locals().get('CONFIG_PATH', 'desconocida')}")
-    sys.exit(1)
+    DIRECTORIO_PDFS = cfg.get('paths', 'directorio_local_para_procesar')
+    DIRECTORIO_ERRORES = cfg.get('paths', 'directorio_errores', fallback='../errores')
+    CARPETA_ARCHIVOS_PADRES = cfg.get('paths', 'carpeta_archivos_padres', fallback='../archivos_padres')
+    logfile = cfg.get('logs', 'archivo_log', fallback='../logs/actividad.log')
 
-# Configurar logging
-logging.basicConfig(filename=logfile, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    return CONFIG_PATH, secciones
+
+# Nota: el logging se configurará tras cargar la configuración.
 
 # ===========================
 # Funciones auxiliares
@@ -259,6 +270,19 @@ def procesar_directorio(debug=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Registrar documentos PDF en base de datos.")
     parser.add_argument("--debug", action="store_true", help="Habilitar salida debug")
+    parser.add_argument("--config", help="Ruta al archivo de configuración .cf", default=None)
     args = parser.parse_args()
+
+    # Cargar configuración con ruta opcional
+    try:
+        config_path_usada, secciones = cargar_config(args.config)
+    except Exception as e:
+        print(f"Error cargando configuraciones: {e}")
+        print(f"Sugerencia: use --config /ruta/a/config.cf o variable EXTRACT_PDF_CONFIG")
+        sys.exit(1)
+
+    # Configurar logging una vez tenemos 'logfile'
+    logging.basicConfig(filename=logfile, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.info(f"Usando configuración: {config_path_usada} | Secciones: {secciones}")
 
     procesar_directorio(args.debug)
