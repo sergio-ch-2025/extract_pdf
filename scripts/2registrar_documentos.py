@@ -25,7 +25,7 @@ DIRECTORIO_PDFS = None
 DIRECTORIO_ERRORES = None
 CARPETA_ARCHIVOS_PADRES = None
 logfile = None
- ## comentario: se asignan en cargar_config()
+ ## comentario: se asignan en cargar_config()  
 
 def cargar_config(config_path_override=None):
     global DB_HOST, DB_USER, DB_PASS, DB_NAME
