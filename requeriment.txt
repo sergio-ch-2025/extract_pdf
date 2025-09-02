@@ -12,3 +12,4 @@ easyocr
 opencv-python
 pandas
 configparser
+pymysql

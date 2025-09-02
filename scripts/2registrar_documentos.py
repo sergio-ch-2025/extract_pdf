@@ -155,7 +155,18 @@ def procesar_directorio(debug=False):
         logging.error(f"Directorio no existe: {DIRECTORIO_PDFS}")
         sys.exit(1)
 
-    connection = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME)
+    # Conexión a la base de datos con manejo de errores explícito
+    try:
+        connection = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, database=DB_NAME)
+    except pymysql.err.OperationalError as e:
+        mensaje = (
+            f"Error de conexión a MySQL: {e}.\n"
+            f"Verifique credenciales/permisos y que exista la BD.\n"
+            f"host={DB_HOST}, user={DB_USER}, db={DB_NAME}"
+        )
+        logging.error(mensaje)
+        print(mensaje)
+        sys.exit(2)
 
     archivos = [f for f in os.listdir(DIRECTORIO_PDFS) if f.lower().endswith('.pdf')]
     if not archivos:
