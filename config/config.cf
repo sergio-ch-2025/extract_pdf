@@ -40,7 +40,7 @@ enviar_correo_automatico = false
 
 
 [database]
-host = localhost
+host = 127.0.0.1
 user = sch_virtual
 password = Linux3468
 dbname = extraccion_pdf
