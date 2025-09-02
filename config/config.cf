@@ -43,7 +43,7 @@ enviar_correo_automatico = false
 host = 127.0.0.1
 user = sch_virtual
 password = Linux3468
-dbname = extraccion_pdf
+dbname = extract_pdf
 
 [database_lectura]
 host = 192.168.100.213
