@@ -93,7 +93,7 @@ logger = logging.getLogger(__name__)
 try:
     import easyocr
     try:
-        reader_easyocr = easyocr.Reader(['es'], gpu=True)
+        reader_easyocr = easyocr.Reader(['es'], gpu=False)
         logger.info("EasyOCR cargado correctamente con GPU.")
     except Exception as gpu_e:
         logger.warning(f"Fallo carga EasyOCR con GPU: {gpu_e}. Reintentando con CPU...")
