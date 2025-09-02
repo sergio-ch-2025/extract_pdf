@@ -19,7 +19,19 @@ from time import time
 # ===========================
 config = configparser.ConfigParser()
 try:
-    config.read('../config/config.cf')
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    # Permitir override por variable de entorno, si se desea.
+    DEFAULT_CONFIG_PATH = os.path.abspath(os.path.join(SCRIPT_DIR, '..', 'config', 'config.cf'))
+    CONFIG_PATH = os.environ.get('EXTRACT_PDF_CONFIG', DEFAULT_CONFIG_PATH)
+
+    read_files = config.read(CONFIG_PATH)
+    if not read_files:
+        raise FileNotFoundError(f"No se pudo leer el archivo de configuración en: {CONFIG_PATH}")
+
+    if not config.has_section('database'):
+        raise configparser.NoSectionError('database')
+    if not config.has_section('paths'):
+        raise configparser.NoSectionError('paths')
 
     DB_HOST = config.get('database', 'host')
     DB_USER = config.get('database', 'user')
@@ -31,7 +43,7 @@ try:
     CARPETA_ARCHIVOS_PADRES = config.get('paths', 'carpeta_archivos_padres', fallback='../archivos_padres')
     logfile = config.get('logs', 'archivo_log', fallback='../logs/actividad.log')
 except Exception as e:
-    print(f"Error cargando configuraciones: {e}")
+    print(f"Error cargando configuraciones: {e}\nRuta intentada: {locals().get('CONFIG_PATH', 'desconocida')}")
     sys.exit(1)
 
 # Configurar logging
