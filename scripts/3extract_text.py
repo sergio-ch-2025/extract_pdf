@@ -36,9 +36,10 @@ def init_worker():
 
     try:
         if config.getboolean('ocr', 'usar_paddleocr', fallback=True):
-            logger.info("Inicializando PaddleOCR con GPU...")
-            ocr_paddle = PaddleOCR(use_angle_cls=True, lang='es', use_gpu=False, show_log=False)
-            logger.info("PaddleOCR (GPU) cargado correctamente.")
+            logger.info("Inicializando PaddleOCR...")
+            # Evitar 'use_gpu' para compatibilidad entre versiones
+            ocr_paddle = PaddleOCR(use_angle_cls=True, lang='es', show_log=False)
+            logger.info("PaddleOCR cargado correctamente.")
         else:
             ocr_paddle = None
     except Exception as e:
@@ -391,11 +392,10 @@ def dividir_y_extraer_inferior_derecha(img: Image.Image, debug=False):
 
 def extraer_texto_paddleocr(path_pdf):
     try:
-        #ocr = PaddleOCR(use_angle_cls=True, lang='es', use_gpu=False)
+        #ocr = PaddleOCR(use_angle_cls=True, lang='es')
         ocr = PaddleOCR(
                 use_angle_cls=True,
                 lang='es',
-                use_gpu=False,
                 det_model_dir='/AI/ia_sch/models/paddle/det_model_es',
                 rec_model_dir='/AI/ia_sch/models/paddle/rec_model_es',
                 cls_model_dir='/AI/ia_sch/models/paddle/cls_model_es'
@@ -856,34 +856,18 @@ def initializer():
                 logger.error(f"Una o más rutas de modelos PaddleOCR no existen: det={DETECT_MODEL_DIR}, rec={REC_MODEL_DIR}, cls={CLS_MODEL_DIR}")
             else:
                 try:
-                    logger.info("Inicializando PaddleOCR con GPU...")
+                    logger.info("Inicializando PaddleOCR...")
                     _models['paddleocr'] = PaddleOCR(
                         use_angle_cls=True,
                         lang='es',
-                        use_gpu=False,
                         det_model_dir=DETECT_MODEL_DIR,
                         rec_model_dir=REC_MODEL_DIR,
                         cls_model_dir=CLS_MODEL_DIR
                     )
-                    logger.info("PaddleOCR (GPU) cargado correctamente.")
+                    logger.info("PaddleOCR cargado correctamente.")
                 except Exception as e:
-                    if "libcublas.so" in str(e):
-                        logger.warning("⚠️ Error relacionado con libcublas al usar GPU en PaddleOCR: %s", e)
-                        logger.warning("⏬ Reintentando PaddleOCR con CPU...")
-                        _models['paddleocr'] = PaddleOCR(
-
-                            use_angle_cls=True,
-                            lang='es',
-                            use_gpu=False,
-                            det_model_dir=DETECT_MODEL_DIR,
-                            rec_model_dir=REC_MODEL_DIR,
-                            cls_model_dir=CLS_MODEL_DIR
-                        )
-                        logger.info("PaddleOCR (CPU) cargado correctamente.")
-                    else:
-
-                        logger.error("❌ Error inesperado al cargar PaddleOCR: %s", e)
-                        raise
+                    logger.error("❌ Error al cargar PaddleOCR: %s", e)
+                    raise
         if USE_EASYOCR:
             # Usar el reader_easyocr si está disponible, si no, None
             _models['easyocr'] = reader_easyocr

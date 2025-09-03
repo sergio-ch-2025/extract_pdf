@@ -1,0 +1,16 @@
+scp>=0.14.5
+PyMuPDF
+pytesseract
+paddleocr
+# If GPU not available, ensure paddlepaddle CPU is installed via setup script
+python-docx
+pymysql
+easyocr
+opencv-python
+pandas
+configparser
+python-doctr
+pdf2image
+num2words
+paramiko
+unidecode
