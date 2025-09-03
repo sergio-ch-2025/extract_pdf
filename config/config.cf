@@ -10,7 +10,8 @@ scp_o_sftp= scp
 
 [paths]
 #directorio de donde se toman inicialmente los pdf
-directorio_local_entrada = ../entrada    
+#directorio_local_entrada = ../entrada
+directorio_local_entrada = ../entrada
 
 #directorio en donde se hacen las lecturas de los pdf que estan en proceso.
 directorio_local_para_procesar = ../para_procesar

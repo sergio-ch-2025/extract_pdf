@@ -13,3 +13,26 @@ opencv-python
 pandas
 configparser
 pymysql
+python-doctr
+pdf2image
+num2words
+paramiko
+
+# OCR y visión por computador
+#pip install opencv-python
+#pip install easyocr
+#pip install paddleocr
+#pip install python-doctr
+#
+# Conversión de PDF a imágenes
+#pip install pdf2image
+#
+# Motores OCR adicionales
+#pip install pytesseract
+#
+# Utilidades extra
+#pip install num2words
+#
+# Conexiones remotas
+#pip install paramiko
+#pip install scp

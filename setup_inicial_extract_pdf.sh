@@ -28,6 +28,7 @@ install_rocky_like() {
     ${PYTHON_BIN} ${PYTHON_BIN}-pip ${PYTHON_BIN}-devel \
     gcc gcc-c++ make \
     tesseract tesseract-langpack-spa \
+    poppler-utils \
     mesa-libGL \
     glib2 \
     libSM libXrender libXext \
